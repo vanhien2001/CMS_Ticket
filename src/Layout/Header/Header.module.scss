@@ -1,0 +1,35 @@
+.header {
+    background-color: transparent;
+    height: 100%;
+    padding: 24px 64px 24px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .input{
+        background-color: #EDE6E6;
+        border: none;
+        border-radius: 8px;
+        input{
+            background-color: #EDE6E6;
+        }
+    }
+    .headerRight {
+        display: flex;
+        align-items: center;
+        .iconNotify{
+            border: none;
+            color: #1E0D03;
+            background-color: transparent;
+            margin-right: 20px;
+        }
+        .inforContainer {
+            display: flex;
+            align-items: center;
+            .avatar {
+                width: 40px;
+                height: 40px;
+                margin: 0 8px 0 24px;
+            }
+        }
+    }
+}
