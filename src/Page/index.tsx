@@ -28,7 +28,7 @@ const Home = () => {
                 >
                     <SideBar />
                 </Sider>
-                <Layout style={{ marginLeft: 250 }}>
+                <Layout style={{ marginLeft: 250, height: "100vh", backgroundColor: "#F9F6F4"}}>
                     <Header
                         style={{
                             height: "88px",
@@ -42,7 +42,7 @@ const Home = () => {
                         <Routes>
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/manage-ticket" element={<ManageTicket />} />
-                            <Route path="/change-ticket/*" element={<ChangeTicket />} />
+                            <Route path="/change-ticket" element={<ChangeTicket />} />
                             <Route path="/setting/*" element={<Setting />} />
                         </Routes>
                     </Content>
