@@ -62,14 +62,23 @@ const index = () => {
     };
     return (
         <div className={styles.dashboard}>
-            <Typography.Title>Thống kê</Typography.Title>
+            <Typography.Title className={styles.title}>
+                Thống kê
+            </Typography.Title>
             <Row justify="space-between">
                 <Col>
-                    <Typography.Text>Doanh thu</Typography.Text>
+                    <Typography.Text className={styles.subtitle}>
+                        Doanh thu
+                    </Typography.Text>
                 </Col>
                 <Col>
                     {" "}
-                    <DatePicker />
+                    <DatePicker
+                        picker="date"
+                        placeholder="Chọn ngày"
+                        className={styles.datePicker}
+                        format={"[Tháng] M, YYYY"}
+                    />
                 </Col>
             </Row>
             <Chart
@@ -88,29 +97,63 @@ const index = () => {
                 ]}
             />
             <Space direction="vertical" className={styles.totalContainer}>
-                <Typography.Text>Tổng doanh thu theo tuần</Typography.Text>
-                <Typography.Text>
-                    <b>525.145.000</b> đồng
+                <Typography.Text className={styles.text}>
+                    Tổng doanh thu theo tuần
+                </Typography.Text>
+                <Typography.Text className={styles.text}>
+                    <span>525.145.000</span> đồng
                 </Typography.Text>
             </Space>
-            <Row className={styles.chartPieContainer}>
-                <Col span="8">
-                    {" "}
-                    <DatePicker
-                        picker="month"
-                        placeholder="Chọn tháng"
-                        className={styles.datePicker}
-                        format={"[Tháng] M, YYYY"}
-                    />
-                </Col>
-                <Col span="8">
-                    <Typography.Text>Gói gia đình</Typography.Text>
-                </Col>
-                <Col span="8">
-                    <Typography.Text>Gói Sự kiện</Typography.Text>
-                </Col>
-                <Col span="8"></Col>
-            </Row>
+            <div className={styles.chartPieContainer}>
+                <Row>
+                    <Col span="6">
+                        {" "}
+                        <DatePicker
+                            picker="month"
+                            placeholder="Chọn tháng"
+                            className={styles.datePicker}
+                            format={"[Tháng] M, YYYY"}
+                        />
+                    </Col>
+                    <Col span="6">
+                        <Typography.Text className={styles.text2}>
+                            Gói gia đình
+                        </Typography.Text>
+                    </Col>
+                    <Col span="6">
+                        <Typography.Text className={styles.text2}>
+                            Gói Sự kiện
+                        </Typography.Text>
+                    </Col>
+                    <Col span="6"></Col>
+                </Row>
+                <Row>
+                    <Col span="6" offset="6"></Col>
+                    <Col span="6"></Col>
+                    <Col span="6">
+                        <Space direction="vertical">
+                            <Space className={styles.noteContainer} size={8}>
+                                <span
+                                    className={styles.color}
+                                    style={{ backgroundColor: "#4F75FF" }}
+                                ></span>
+                                <span className={styles.text}>
+                                    Vé đã sử dụng
+                                </span>
+                            </Space>
+                            <Space className={styles.noteContainer} size={8}>
+                                <span
+                                    className={styles.color}
+                                    style={{ backgroundColor: "#FF8A48" }}
+                                ></span>
+                                <span className={styles.text}>
+                                    Vé chưa sử dụng
+                                </span>
+                            </Space>
+                        </Space>
+                    </Col>
+                </Row>
+            </div>
         </div>
     );
 };

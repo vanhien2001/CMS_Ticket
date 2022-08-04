@@ -30,18 +30,8 @@ const Header = () => {
                 placeholder={"Search"}
             />
             <div className={clsx(styles.headerRight)}>
-                <Button
-                    type="primary"
-                    className={styles.iconNotify}
-                    shape="circle"
-                    icon={<MailOutlined />}
-                />
-                <Button
-                    type="primary"
-                    className={styles.iconNotify}
-                    shape="circle"
-                    icon={<BellOutlined />}
-                />
+                <MailOutlined className={styles.iconNotify}/>
+                <BellOutlined className={styles.iconNotify}/>
                 <Avatar src={avatarImage} className={styles.avatar} />
             </div>
         </div>

@@ -1,14 +1,11 @@
 import {
-    AppstoreOutlined,
-    WechatOutlined,
-    DesktopOutlined,
-    CodepenOutlined,
-    FileTextOutlined,
-    ExportOutlined,
+    HomeOutlined,
+    ContainerOutlined,
+    CreditCardOutlined,
     SettingOutlined,
     MoreOutlined,
 } from "@ant-design/icons";
-import { Button, MenuProps } from "antd";
+import { MenuProps } from "antd";
 import { Menu } from "antd";
 import clsx from "clsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -48,17 +45,17 @@ const SideBar = () => {
         getItem(
             "/dashboard",
             <Link to="/dashboard">Trang chủ</Link>,
-            <AppstoreOutlined />
+            <HomeOutlined />
         ),
         getItem(
             "/manage-ticket",
             <Link to="/manage-ticket">Quản lý vé</Link>,
-            <DesktopOutlined />
+            <CreditCardOutlined />
         ),
         getItem(
             "/change-ticket",
             <Link to="/change-ticket">Đổi soát vé</Link>,
-            <WechatOutlined />
+            <ContainerOutlined />
         ),
         getItem(
             "setting",

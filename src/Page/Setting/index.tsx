@@ -1,19 +1,17 @@
 import {
-    Badge,
     Button,
     Col,
     Input,
     Row,
     Space,
     Table,
-    Tag,
     Typography,
 } from "antd";
 import Icon, { EditOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 import { ReactComponent as searchSvg } from "../../Asset/search.svg";
 import Status from "../../component/Status";
 import styles from "./Setting.module.scss";
-import { Link } from "react-router-dom";
 
 const columns = [
     {
@@ -107,7 +105,7 @@ const dataSource = [
 const Setting = () => {
     return (
         <div className={styles.setting}>
-            <Typography.Title>Danh sách gói vé</Typography.Title>
+            <Typography.Title className={styles.title}>Danh sách gói vé</Typography.Title>
             <Row justify="space-between">
                 <Col>
                     <Typography.Text>
