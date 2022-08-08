@@ -4,6 +4,7 @@ import {
     DatePicker,
     Form,
     Input,
+    Modal,
     Radio,
     Row,
     Space,
@@ -15,6 +16,7 @@ import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
 import { Link } from "react-router-dom";
 import Status from "../../../component/Status";
 import styles from "./ChangeTicket.module.scss";
+import { useState } from "react";
 
 const columns = [
     {
@@ -92,7 +94,7 @@ const dataSource = [
 const ChangeTicket = () => {
     return (
         <div className={styles.changeTicket}>
-            <Row gutter={24} style={{height: '100%'}}>
+            <Row gutter={24} style={{ height: "100%" }}>
                 <Col span={17}>
                     <div className={styles.content}>
                         <Typography.Title className={styles.title}>
@@ -206,7 +208,13 @@ const ChangeTicket = () => {
                             />
                         </Form.Item>
                         <div className={styles.buttonContainer}>
-                            <Button ghost htmlType="submit" className={styles.btn}>Lọc</Button>
+                            <Button
+                                ghost
+                                htmlType="submit"
+                                className={styles.btn}
+                            >
+                                Lọc
+                            </Button>
                         </div>
                     </Form>
                 </Col>
