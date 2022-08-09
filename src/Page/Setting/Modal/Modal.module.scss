@@ -1,0 +1,47 @@
+@import "../../../Style/color.scss";
+
+.modal {
+    color: $textColor;
+    .title {
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 30px;
+        text-align: center;
+        margin-bottom: 2px;
+    }
+    .note {
+        display: block;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+        margin-top: 16.5px;
+    }
+    .require {
+        color: #fd5959;
+        margin-right: 8px;
+    }
+    .label {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 26px;
+    }
+    .checkItem {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+    }
+    .buttonContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 23px;
+        .btn {
+            height: 48px;
+            width: 160px;
+            & + .btn {
+                margin-left: 24px;
+            }
+        }
+    }
+}

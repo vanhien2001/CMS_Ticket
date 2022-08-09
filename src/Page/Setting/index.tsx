@@ -1,17 +1,26 @@
+import { useState } from "react";
 import {
     Button,
+    Checkbox,
     Col,
+    DatePicker,
+    Form,
     Input,
     Row,
+    Select,
     Space,
     Table,
+    TimePicker,
     Typography,
 } from "antd";
-import Icon, { EditOutlined } from "@ant-design/icons";
+import Icon, { EditOutlined, DownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ReactComponent as searchSvg } from "../../Asset/search.svg";
 import Status from "../../component/Status";
+import Modal from "./Modal"
 import styles from "./Setting.module.scss";
+
+const { Option } = Select;
 
 const columns = [
     {
@@ -77,10 +86,10 @@ const dataSource = [
         dateExp: "14/04/2021 23:00:00",
         price: "90.000 VNĐ",
         priceCombo: "360.000 VNĐ/4 Vé",
-        status: <Status type="success" color="#03AC00" text="Đang áp dụng"/>,
+        status: <Status type="success" color="#03AC00" text="Đang áp dụng" />,
         edit: (
             <Link to={"./#"} className={styles.link}>
-                <EditOutlined style={{marginRight: '8px'}}/> Cập nhật
+                <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
             </Link>
         ),
     },
@@ -93,19 +102,23 @@ const dataSource = [
         dateExp: "14/04/2021 23:00:00",
         price: "90.000 VNĐ",
         priceCombo: "",
-        status: <Status type="error" color="#FD5959" text="Tắt"/>,
+        status: <Status type="error" color="#FD5959" text="Tắt" />,
         edit: (
             <Link to={"./#"} className={styles.link}>
-                <EditOutlined style={{marginRight: '8px'}}/> Cập nhật
+                <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
             </Link>
         ),
     },
 ];
 
 const Setting = () => {
+    const [showModal, setShowModal] = useState<boolean>(false);
+
     return (
         <div className={styles.setting}>
-            <Typography.Title className={styles.title}>Danh sách gói vé</Typography.Title>
+            <Typography.Title className={styles.title}>
+                Danh sách gói vé
+            </Typography.Title>
             <Row justify="space-between">
                 <Col>
                     <Typography.Text>
@@ -133,7 +146,11 @@ const Setting = () => {
                         <Button ghost className={styles.btn}>
                             Xuất file (.csv)
                         </Button>
-                        <Button type="primary" className={styles.btn}>
+                        <Button
+                            type="primary"
+                            className={styles.btn}
+                            onClick={() => setShowModal(true)}
+                        >
                             Thêm gói vé
                         </Button>
                     </Space>
@@ -151,6 +168,7 @@ const Setting = () => {
                     showSizeChanger: false,
                 }}
             />
+            <Modal showModal={showModal} setShowModal={setShowModal}/>
         </div>
     );
 };
