@@ -1,20 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
-    Checkbox,
     Col,
-    DatePicker,
-    Form,
     Input,
     Row,
     Select,
     Space,
     Table,
-    TimePicker,
     Typography,
 } from "antd";
-import Icon, { EditOutlined, DownOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import Icon, { EditOutlined } from "@ant-design/icons";
+import { useAppSelector, useAppDispatch } from "../../store";
+import {
+    ticketPackageSelector,
+    getAll,
+} from "../../store/reducers/ticketPackageSlice";
 import { ReactComponent as searchSvg } from "../../Asset/search.svg";
 import Status from "../../component/Status";
 import Modal from "./Modal";
@@ -43,14 +43,14 @@ const columns = [
     },
     {
         title: "Ngày áp dụng",
-        dataIndex: "date",
-        key: "date",
+        dataIndex: "validDate",
+        key: "validDate",
         align: "right" as "right",
     },
     {
         title: "Ngày hết hạn",
-        dataIndex: "dateExp",
-        key: "dateExp",
+        dataIndex: "expiryDate",
+        key: "expiryDate",
         align: "right" as "right",
     },
     {
@@ -77,66 +77,17 @@ const columns = [
 ];
 
 const Setting = () => {
+    const dispatch = useAppDispatch();
+    const { loading, ticketPackages } = useAppSelector(ticketPackageSelector);
     const [showModal, setShowModal] = useState({
         show: false,
         edit: false,
         data: null,
     });
 
-    const dataSource = [
-        {
-            key: "1",
-            stt: 1,
-            id: "ALT20210501",
-            name: "Gói gia đình",
-            date: "14/04/2021 08:00:00",
-            dateExp: "14/04/2021 23:00:00",
-            price: "90.000 VNĐ",
-            priceCombo: "360.000 VNĐ/4 Vé",
-            status: (
-                <Status type="success" color="#03AC00" text="Đang áp dụng" />
-            ),
-            edit: (
-                <div
-                    className={styles.link}
-                    onClick={() =>
-                        setShowModal({
-                            show: true,
-                            edit: true,
-                            data: null,
-                        })
-                    }
-                >
-                    <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
-                </div>
-            ),
-        },
-        {
-            key: "2",
-            stt: 2,
-            id: "ALT20210501",
-            name: "Gói sự kiện",
-            date: "14/04/2021 08:00:00",
-            dateExp: "14/04/2021 23:00:00",
-            price: "90.000 VNĐ",
-            priceCombo: "",
-            status: <Status type="error" color="#FD5959" text="Tắt" />,
-            edit: (
-                <div
-                    className={styles.link}
-                    onClick={() =>
-                        setShowModal({
-                            show: true,
-                            edit: true,
-                            data: null,
-                        })
-                    }
-                >
-                    <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
-                </div>
-            ),
-        },
-    ];
+    useEffect(() => {
+        dispatch(getAll());
+    }, []);
 
     return (
         <div className={styles.setting}>
@@ -188,8 +139,36 @@ const Setting = () => {
             </Row>
             <Table
                 className={styles.table}
-                dataSource={dataSource}
                 columns={columns}
+                dataSource={ticketPackages.map((ticketPackage, index) => {
+                    return {
+                        key: index++,
+                        stt: index++,
+                        id: ticketPackage.code,
+                        name: ticketPackage.name,
+                        validDate: "14/04/2021 08:00:00",
+                        expiryDate: "14/04/2021 23:00:00",
+                        price: ticketPackage.price +  "VNĐ",
+                        priceCombo: ticketPackage.comboPrice ? ticketPackage.comboPrice + "VNĐ/4 Vé" : '',
+                        status: <Status type={ticketPackage.status} text={ticketPackage.status == 1 ? "Đang áp dụng" : 'Tắt'} />,
+                        edit: (
+                            <div
+                                className={styles.link}
+                                onClick={() =>
+                                    setShowModal({
+                                        show: true,
+                                        edit: true,
+                                        data: null,
+                                    })
+                                }
+                            >
+                                <EditOutlined style={{ marginRight: "8px" }} />{" "}
+                                Cập nhật
+                            </div>
+                        ),
+                    };
+                })}
+                loading={loading}
                 size="middle"
                 pagination={{
                     defaultPageSize: 8,

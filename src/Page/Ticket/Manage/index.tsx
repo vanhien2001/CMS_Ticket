@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     Col,
@@ -10,7 +10,8 @@ import {
     Typography,
 } from "antd";
 import Icon, { FilterOutlined, MoreOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../../store";
+import { ticketSelector, getAll } from "../../../store/reducers/ticketSlice";
 import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
 import Status from "../../../component/Status";
 import ModalFilter from "./Modal/ModalFilter";
@@ -65,78 +66,16 @@ const columns = [
     },
 ];
 
-
 const ManageTicket = () => {
+    const dispatch = useAppDispatch();
+    const { loading, tickets } = useAppSelector(ticketSelector);
     const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
     const [showModalChange, setShowModalChange] = useState<boolean>(false);
+
+    useEffect(() => {
+        dispatch(getAll());
+    }, []);
     
-    const dataSource = [
-        {
-            key: "1",
-            stt: 1,
-            code: "ALTFGHJU",
-            number: "123456789034",
-            status: <Status type="default" color="#919DBA" text="Đã sử dụng" />,
-            date: "14/04/2021",
-            dateRelease: "14/04/2021",
-            gate: "Cổng 1",
-            edit: <MoreOutlined />,
-        },
-        {
-            key: "2",
-            stt: 2,
-            code: "ALTOJMNB",
-            number: "236784631642",
-            status: <Status type="success" color="#03AC00" text="Chưa sử dụng" />,
-            date: "14/04/2021",
-            dateRelease: "14/04/2021",
-            gate: "-",
-            edit: (
-                <Popover
-                    placement="left"
-                    content={
-                        <Space direction='vertical' className={styles.popverContainer}>
-                            <Typography.Text className={styles.popverText}>Sử dụng vé</Typography.Text>
-                            <Typography.Text className={styles.popverText} onClick={() => setShowModalChange(true)}>Đổi ngày sử dụng</Typography.Text>
-                        </Space>
-                    }
-                    trigger="click"
-                >
-                    <MoreOutlined />
-                </Popover>
-            ),
-        },
-        {
-            key: "3",
-            stt: 3,
-            code: "ALTOJMNB",
-            number: "236784631642",
-            status: <Status type="error" color="#FD5959" text="Hết hạn" />,
-            date: "14/04/2021",
-            dateRelease: "14/04/2021",
-            gate: "-",
-        },
-        {
-            key: "4",
-            stt: 4,
-            code: "ALTOJMNB",
-            number: "236784631642",
-            status: <Status type="default" color="#919DBA" text="Đã sử dụng" />,
-            date: "14/04/2021",
-            dateRelease: "14/04/2021",
-            gate: "Cổng 1",
-        },
-        {
-            key: "5",
-            stt: 5,
-            code: "ALTOJMNB",
-            number: "236784631642",
-            status: <Status type="default" color="#919DBA" text="Đã sử dụng" />,
-            date: "14/04/2021",
-            dateRelease: "14/04/2021",
-            gate: "Cổng 1",
-        },
-    ];
     return (
         <div className={styles.manageTicket}>
             <Typography.Title className={styles.title}>
@@ -182,9 +121,63 @@ const ManageTicket = () => {
             </Row>
             <Table
                 className={styles.table}
-                dataSource={dataSource}
                 columns={columns}
+                dataSource={tickets.map((ticket, index) => {
+                    return {
+                        key: index++,
+                        stt: index++,
+                        code: ticket.bookingCode,
+                        number: ticket.number,
+                        status: (
+                            <Status
+                                type={ticket.status}
+                                text={
+                                    ticket.status == 0
+                                        ? "Đã sử dụng"
+                                        : ticket.status == 1
+                                        ? "Chưa sử dụng"
+                                        : "Hết hạn"
+                                }
+                            />
+                        ),
+                        date: "14/04/2021",
+                        dateRelease: "14/04/2021",
+                        gate: ticket.status == 0 ? 'Cổng ' + ticket.checkIn : "-",
+                        edit:
+                            ticket.status == 1 ? (
+                                <Popover
+                                    placement="left"
+                                    content={
+                                        <Space
+                                            direction="vertical"
+                                            className={styles.popverContainer}
+                                        >
+                                            <Typography.Text
+                                                className={styles.popverText}
+                                            >
+                                                Sử dụng vé
+                                            </Typography.Text>
+                                            <Typography.Text
+                                                className={styles.popverText}
+                                                onClick={() =>
+                                                    setShowModalChange(true)
+                                                }
+                                            >
+                                                Đổi ngày sử dụng
+                                            </Typography.Text>
+                                        </Space>
+                                    }
+                                    trigger="click"
+                                >
+                                    <MoreOutlined />
+                                </Popover>
+                            ) : (
+                                ""
+                            ),
+                    };
+                })}
                 size="middle"
+                loading={loading}
                 pagination={{
                     defaultPageSize: 8,
                     position: ["bottomCenter"],
@@ -192,8 +185,14 @@ const ManageTicket = () => {
                     showSizeChanger: false,
                 }}
             />
-            <ModalFilter showModal={showModalFilter} setShowModal={setShowModalFilter} />
-            <ModalChange showModal={showModalChange} setShowModal={setShowModalChange} />
+            <ModalFilter
+                showModal={showModalFilter}
+                setShowModal={setShowModalFilter}
+            />
+            <ModalChange
+                showModal={showModalChange}
+                setShowModal={setShowModalChange}
+            />
         </div>
     );
 };

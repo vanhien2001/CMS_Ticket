@@ -1,8 +1,8 @@
+import { useState } from "react";
 import {
     Button,
     Checkbox,
     Col,
-    DatePicker,
     Form,
     Input,
     Modal,
@@ -11,7 +11,9 @@ import {
     TimePicker,
     Typography,
 } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, FieldTimeOutlined } from "@ant-design/icons";
+import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
+import DatePickerCustom from "../../../component/DatePicker";
 import styles from "./Modal.module.scss";
 
 const { Option } = Select;
@@ -27,6 +29,11 @@ interface IModal {
 }
 
 const ModalContainer = ({ showModal, setShowModal }: IModal) => {
+    const [dayRange, setDayRange] = useState<DayRange>({
+        from: null,
+        to: null,
+    });
+
     return (
         <Modal
             centered
@@ -101,13 +108,24 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                         >
                             <Row gutter={8}>
                                 <Col span="12">
-                                    <DatePicker
-                                        format={["DD/MM/yyyy"]}
-                                        size="large"
+                                    <DatePickerCustom
+                                        type="from"
+                                        dayRange={dayRange}
+                                        setDayRange={setDayRange}
                                     />
                                 </Col>
                                 <Col span="12">
-                                    <TimePicker size="large" />
+                                    <TimePicker
+                                        size="large"
+                                        suffixIcon={
+                                            <FieldTimeOutlined
+                                                style={{
+                                                    color: "#FF993C",
+                                                    fontSize: "20px",
+                                                }}
+                                            />
+                                        }
+                                    />
                                 </Col>
                             </Row>
                         </Form.Item>
@@ -124,13 +142,24 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                         >
                             <Row gutter={8}>
                                 <Col span="12">
-                                    <DatePicker
-                                        format={["DD/MM/yyyy"]}
-                                        size="large"
+                                    <DatePickerCustom
+                                        type="to"
+                                        dayRange={dayRange}
+                                        setDayRange={setDayRange}
                                     />
                                 </Col>
                                 <Col span="12">
-                                    <TimePicker size="large" />
+                                    <TimePicker
+                                        size="large"
+                                        suffixIcon={
+                                            <FieldTimeOutlined
+                                                style={{
+                                                    color: "#FF993C",
+                                                    fontSize: "20px",
+                                                }}
+                                            />
+                                        }
+                                    />
                                 </Col>
                             </Row>
                         </Form.Item>

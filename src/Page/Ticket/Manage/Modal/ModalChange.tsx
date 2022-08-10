@@ -1,14 +1,14 @@
+import { useState } from "react";
 import {
     Button,
-    Checkbox,
     Col,
-    DatePicker,
     Form,
     Modal,
     Row,
     Typography,
 } from "antd";
-import { CalendarOutlined } from "@ant-design/icons";
+import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
+import DatePickerCustom from "../../../../component/DatePicker";
 import styles from "./Modal.module.scss";
 
 interface IModal {
@@ -17,6 +17,11 @@ interface IModal {
 }
 
 const ModalContainer = ({ showModal, setShowModal }: IModal) => {
+    const [dayRange, setDayRange] = useState<DayRange>({
+        from: null,
+        to: null,
+    });
+
     return (
         <Modal
             centered
@@ -98,16 +103,12 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                 </Typography.Text>
                             }
                         >
-                            <DatePicker
-                                format={["DD/MM/yyyy"]}
-                                size="large"
-                                placeholder="Chọn ngày"
-                                className={styles.datePicker}
-                                suffixIcon={
-                                    <CalendarOutlined
-                                        style={{ color: "#FF993C", fontSize: "20px" }}
-                                    />
-                                }
+                            <DatePickerCustom
+                                type="from"
+                                hasOption={false}
+                                dayRange={dayRange}
+                                setDayRange={setDayRange}
+                                inputClassName={`${styles.datePickerInput} ${styles.datePickerInputFirst}`}
                             />
                         </Form.Item>
                     </Col>

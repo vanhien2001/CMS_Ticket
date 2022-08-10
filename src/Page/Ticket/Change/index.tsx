@@ -1,25 +1,23 @@
+import { useEffect, useState } from "react";
 import {
     Button,
     Col,
-    DatePicker,
     Form,
     Input,
-    Modal,
     Radio,
     Row,
     Space,
     Table,
     Typography,
 } from "antd";
-import Icon, { EditOutlined } from "@ant-design/icons";
+import Icon from "@ant-design/icons";
 import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../../store";
+import { ticketSelector, getAll } from "../../../store/reducers/ticketSlice";
 import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
-import Status from "../../../component/Status";
 import DatePickerCustom from "../../../component/DatePicker";
 import styles from "./ChangeTicket.module.scss";
-import { useState } from "react";
 
 const columns = [
     {
@@ -55,54 +53,17 @@ const columns = [
     },
 ];
 
-const dataSource = [
-    {
-        key: "1",
-        stt: 1,
-        number: "123456789034",
-        date: "14/04/2021",
-        name: "Vé cổng",
-        gate: "Cổng 1",
-        note: <span className={styles.note}>Chưa đối soát</span>,
-    },
-    {
-        key: "2",
-        stt: 2,
-        number: "123456789034",
-        date: "14/04/2021",
-        name: "Vé cổng",
-        gate: "Cổng 1",
-        note: <span className={styles.note}>Chưa đối soát</span>,
-    },
-    {
-        key: "3",
-        stt: 3,
-        number: "123456789034",
-        date: "14/04/2021",
-        name: "Vé cổng",
-        gate: "Cổng 1",
-        note: (
-            <span className={clsx(styles.note, styles.redNote)}>
-                Đã đối soát
-            </span>
-        ),
-    },
-    {
-        key: "4",
-        stt: 4,
-        number: "123456789034",
-        date: "14/04/2021",
-        name: "Vé cổng",
-        gate: "Cổng 1",
-        note: <span className={styles.note}>Chưa đối soát</span>,
-    },
-];
-
 const ChangeTicket = () => {
+    const dispatch = useAppDispatch();
+    const { loading, tickets } = useAppSelector(ticketSelector);
     const [dayRange, setDayRange] = useState<DayRange>({
         from: null,
         to: null,
     });
+
+    useEffect(() => {
+        dispatch(getAll());
+    }, []);
 
     return (
         <div className={styles.changeTicket}>
@@ -142,8 +103,19 @@ const ChangeTicket = () => {
                         </Row>
                         <Table
                             className={styles.table}
-                            dataSource={dataSource}
                             columns={columns}
+                            dataSource={tickets.filter(ticket => ticket.status == 1).map((ticket, index) => {
+                                return {
+                                    key: index++,
+                                    stt: index++,
+                                    number: ticket.number,
+                                    date: "14/04/2021",
+                                    name: "Vé cổng",
+                                    gate: 'Cổng ' + ticket.checkIn,
+                                    note: <span className={clsx(styles.note, {[styles.redNote] : ticket.checked})}>{ticket.checked ? 'Đã đối soát' : 'Chưa đối soát'}</span>,
+                                };
+                            })}
+                            loading={loading}
                             size="middle"
                             pagination={{
                                 defaultPageSize: 8,

@@ -1,18 +1,31 @@
 import { Badge, Tag } from "antd";
-import React from "react";
 import styles from "./Status.module.scss";
 
 interface IStatus {
-    color: string;
     text: string;
-    type: string;
+    type: number;
 }
 
-const Status = ({ type, color, text }: IStatus) => {
+const themes = [
+    {
+        type: 'default',
+        color: '#919DBA'
+    },
+    {
+        type: 'success',
+        color: '#03AC00'
+    },
+    {
+        type: 'error',
+        color: '#FD5959'
+    }
+]
+
+const Status = ({ type, text }: IStatus) => {
     return (
-        <Tag color={type} className={styles.status}>
+        <Tag color={themes[type].type} className={styles.status}>
             {" "}
-            <Badge color={color} text={<span  className={styles.text} style={{color}}>{text}</span>} />
+            <Badge color={themes[type].color} text={<span  className={styles.text} style={{color: themes[type].color}}>{text}</span>} />
         </Tag>
     );
 };
