@@ -1,5 +1,7 @@
 import { Card, Col, DatePicker, Row, Space, Typography } from "antd";
+import { CalendarOutlined } from "@ant-design/icons";
 import Chart from "react-apexcharts";
+import ChartPie from "../../component/ChartPie";
 import styles from "./Dashboard.module.scss";
 
 const index = () => {
@@ -76,8 +78,12 @@ const index = () => {
                     <DatePicker
                         picker="date"
                         placeholder="Chọn ngày"
+                        size="large"
                         className={styles.datePicker}
                         format={"[Tháng] M, YYYY"}
+                        suffixIcon={
+                            <CalendarOutlined style={{ color: "#FF993C", fontSize: "20px" }} />
+                        }
                     />
                 </Col>
             </Row>
@@ -111,8 +117,14 @@ const index = () => {
                         <DatePicker
                             picker="month"
                             placeholder="Chọn tháng"
+                            size="large"
                             className={styles.datePicker}
                             format={"[Tháng] M, YYYY"}
+                            suffixIcon={
+                                <CalendarOutlined
+                                    style={{ color: "#FF993C", fontSize: "20px" }}
+                                />
+                            }
                         />
                     </Col>
                     <Col span="6">
@@ -128,8 +140,31 @@ const index = () => {
                     <Col span="6"></Col>
                 </Row>
                 <Row>
-                    <Col span="6" offset="6"></Col>
-                    <Col span="6"></Col>
+                    <Col span="6" offset="6">
+                        <ChartPie
+                            data={[
+                                {
+                                    name: "Vé đã sử dụng",
+                                    value: 56024,
+                                    fill: "#4F75FF",
+                                },
+                                {
+                                    name: "Vé chưa sử dụng",
+                                    value: 13568,
+                                    fill: "#FF8A48",
+                                },
+                            ]}
+                        />
+                    </Col>
+                    <Col span="6">
+                        <ChartPie
+                            data={[
+                                { name: "Vé đã sử dụng", value: 30256 },
+                                { name: "Vé chưa sử dụng", value: 28302 },
+                            ]}
+                            legend={false}
+                        />
+                    </Col>
                     <Col span="6">
                         <Space direction="vertical">
                             <Space className={styles.noteContainer} size={8}>

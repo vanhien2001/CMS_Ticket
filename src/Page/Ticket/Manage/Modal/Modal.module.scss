@@ -27,6 +27,9 @@
         .btn{
             height: 48px;
             width: 160px;
+            & + .btn {
+                margin-left: 24px;
+            }
         }
     }
 }

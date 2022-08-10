@@ -12,9 +12,12 @@ import {
     Typography,
 } from "antd";
 import Icon, { EditOutlined } from "@ant-design/icons";
-import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
+import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
+import clsx from "clsx";
 import { Link } from "react-router-dom";
+import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
 import Status from "../../../component/Status";
+import DatePickerCustom from "../../../component/DatePicker";
 import styles from "./ChangeTicket.module.scss";
 import { useState } from "react";
 
@@ -78,7 +81,11 @@ const dataSource = [
         date: "14/04/2021",
         name: "Vé cổng",
         gate: "Cổng 1",
-        note: <span className={styles.note}>Chưa đối soát</span>,
+        note: (
+            <span className={clsx(styles.note, styles.redNote)}>
+                Đã đối soát
+            </span>
+        ),
     },
     {
         key: "4",
@@ -92,6 +99,11 @@ const dataSource = [
 ];
 
 const ChangeTicket = () => {
+    const [dayRange, setDayRange] = useState<DayRange>({
+        from: null,
+        to: null,
+    });
+
     return (
         <div className={styles.changeTicket}>
             <Row gutter={24} style={{ height: "100%" }}>
@@ -187,10 +199,11 @@ const ChangeTicket = () => {
                                 </Typography.Text>
                             }
                         >
-                            <DatePicker
-                                placeholder="Chọn ngày"
-                                className={styles.datePicker}
-                                format={"DD/MM/YYYY"}
+                            <DatePickerCustom
+                                type="from"
+                                dayRange={dayRange}
+                                setDayRange={setDayRange}
+                                inputClassName={`${styles.datePickerInput} ${styles.datePickerInputFirst}`}
                             />
                         </Form.Item>
                         <Form.Item
@@ -201,10 +214,11 @@ const ChangeTicket = () => {
                                 </Typography.Text>
                             }
                         >
-                            <DatePicker
-                                placeholder="Chọn ngày"
-                                className={styles.datePicker}
-                                format={"DD/MM/YYYY"}
+                            <DatePickerCustom
+                                type="to"
+                                dayRange={dayRange}
+                                setDayRange={setDayRange}
+                                inputClassName={styles.datePickerInput}
                             />
                         </Form.Item>
                         <div className={styles.buttonContainer}>

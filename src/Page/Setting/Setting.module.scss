@@ -23,9 +23,6 @@
             background-color: $inputSearchColor2;
         }
     }
-    .btn {
-        height: 48px;
-    }
     .table {
         margin-top: 24px;
         .link {
@@ -33,6 +30,11 @@
             font-weight: 500;
             line-height: 22px;
             color: $secondaryColor;
+            cursor: pointer;
         }
+    }
+    .btn {
+        width: 160px;
+        height: 48px;
     }
 }

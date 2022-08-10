@@ -17,7 +17,7 @@ import Icon, { EditOutlined, DownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ReactComponent as searchSvg } from "../../Asset/search.svg";
 import Status from "../../component/Status";
-import Modal from "./Modal"
+import Modal from "./Modal";
 import styles from "./Setting.module.scss";
 
 const { Option } = Select;
@@ -76,43 +76,67 @@ const columns = [
     },
 ];
 
-const dataSource = [
-    {
-        key: "1",
-        stt: 1,
-        id: "ALT20210501",
-        name: "Gói gia đình",
-        date: "14/04/2021 08:00:00",
-        dateExp: "14/04/2021 23:00:00",
-        price: "90.000 VNĐ",
-        priceCombo: "360.000 VNĐ/4 Vé",
-        status: <Status type="success" color="#03AC00" text="Đang áp dụng" />,
-        edit: (
-            <Link to={"./#"} className={styles.link}>
-                <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
-            </Link>
-        ),
-    },
-    {
-        key: "2",
-        stt: 2,
-        id: "ALT20210501",
-        name: "Gói sự kiện",
-        date: "14/04/2021 08:00:00",
-        dateExp: "14/04/2021 23:00:00",
-        price: "90.000 VNĐ",
-        priceCombo: "",
-        status: <Status type="error" color="#FD5959" text="Tắt" />,
-        edit: (
-            <Link to={"./#"} className={styles.link}>
-                <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
-            </Link>
-        ),
-    },
-];
-
 const Setting = () => {
-    const [showModal, setShowModal] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState({
+        show: false,
+        edit: false,
+        data: null,
+    });
+
+    const dataSource = [
+        {
+            key: "1",
+            stt: 1,
+            id: "ALT20210501",
+            name: "Gói gia đình",
+            date: "14/04/2021 08:00:00",
+            dateExp: "14/04/2021 23:00:00",
+            price: "90.000 VNĐ",
+            priceCombo: "360.000 VNĐ/4 Vé",
+            status: (
+                <Status type="success" color="#03AC00" text="Đang áp dụng" />
+            ),
+            edit: (
+                <div
+                    className={styles.link}
+                    onClick={() =>
+                        setShowModal({
+                            show: true,
+                            edit: true,
+                            data: null,
+                        })
+                    }
+                >
+                    <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
+                </div>
+            ),
+        },
+        {
+            key: "2",
+            stt: 2,
+            id: "ALT20210501",
+            name: "Gói sự kiện",
+            date: "14/04/2021 08:00:00",
+            dateExp: "14/04/2021 23:00:00",
+            price: "90.000 VNĐ",
+            priceCombo: "",
+            status: <Status type="error" color="#FD5959" text="Tắt" />,
+            edit: (
+                <div
+                    className={styles.link}
+                    onClick={() =>
+                        setShowModal({
+                            show: true,
+                            edit: true,
+                            data: null,
+                        })
+                    }
+                >
+                    <EditOutlined style={{ marginRight: "8px" }} /> Cập nhật
+                </div>
+            ),
+        },
+    ];
 
     return (
         <div className={styles.setting}>
@@ -149,7 +173,13 @@ const Setting = () => {
                         <Button
                             type="primary"
                             className={styles.btn}
-                            onClick={() => setShowModal(true)}
+                            onClick={() =>
+                                setShowModal({
+                                    show: true,
+                                    edit: false,
+                                    data: null,
+                                })
+                            }
                         >
                             Thêm gói vé
                         </Button>
@@ -168,7 +198,7 @@ const Setting = () => {
                     showSizeChanger: false,
                 }}
             />
-            <Modal showModal={showModal} setShowModal={setShowModal}/>
+            <Modal showModal={showModal} setShowModal={setShowModal} />
         </div>
     );
 };

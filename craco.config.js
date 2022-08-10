@@ -71,6 +71,8 @@ module.exports = {
 
                             //table
                             "@table-header-bg": '#F1F4F8',
+                            //popover
+                            "@popover-background": '#FFD2A8',
                         },
                         javascriptEnabled: true,
                     },

@@ -10,6 +10,7 @@ import {
     Space,
     Typography,
 } from "antd";
+import { CalendarOutlined } from "@ant-design/icons";
 import styles from "./Modal.module.scss";
 
 interface IModal {
@@ -20,6 +21,8 @@ interface IModal {
 const ModalContainer = ({ showModal, setShowModal }: IModal) => {
     return (
         <Modal
+            centered
+            closable={false}
             wrapClassName={styles.modal}
             bodyStyle={{ borderRadius: "10px" }}
             width={634}
@@ -31,7 +34,6 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
             visible={showModal}
             onCancel={() => setShowModal(false)}
             footer={null}
-            maskClosable={false}
         >
             <Form name="filter" layout="vertical">
                 <Row>
@@ -45,7 +47,17 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                 </Typography.Text>
                             }
                         >
-                            <DatePicker format={["DD/MM/yyyy"]} size="large" />
+                            <DatePicker
+                                format={["DD/MM/yyyy"]}
+                                size="large"
+                                placeholder="Chọn ngày"
+                                className={styles.datePicker}
+                                suffixIcon={
+                                    <CalendarOutlined
+                                        style={{ color: "#FF993C", fontSize: "20px" }}
+                                    />
+                                }
+                            />
                         </Form.Item>
                     </Col>
                     <Col span="12">
@@ -58,7 +70,17 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                 </Typography.Text>
                             }
                         >
-                            <DatePicker format={["DD/MM/yyyy"]} size="large" />
+                            <DatePicker
+                                format={["DD/MM/yyyy"]}
+                                size="large"
+                                placeholder="Chọn ngày"
+                                className={styles.datePicker}
+                                suffixIcon={
+                                    <CalendarOutlined
+                                        style={{ color: "#FF993C", fontSize: "20px" }}
+                                    />
+                                }
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
