@@ -10,9 +10,9 @@ import {
     Typography,
 } from "antd";
 import Icon, { FilterOutlined, MoreOutlined } from "@ant-design/icons";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { useAppSelector, useAppDispatch } from "../../../store";
-import { ticketSelector, getAll } from "../../../store/reducers/ticketSlice";
+import { ticketSelector, getAll, ticketType } from "../../../store/reducers/ticketSlice";
 import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
 import Status from "../../../component/Status";
 import ModalFilter from "./Modal/ModalFilter";
@@ -67,11 +67,18 @@ const columns = [
     },
 ];
 
+interface IData {
+    number: string;
+    nameEvent: string;
+    dateUse: Moment;
+}
+
 const ManageTicket = () => {
     const dispatch = useAppDispatch();
     const { loading, tickets } = useAppSelector(ticketSelector);
     const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
     const [showModalChange, setShowModalChange] = useState<boolean>(false);
+    const [data, setData] = useState<ticketType | null>(null);
 
     useEffect(() => {
         dispatch(getAll());
@@ -165,9 +172,10 @@ const ManageTicket = () => {
                                             </Typography.Text>
                                             <Typography.Text
                                                 className={styles.popverText}
-                                                onClick={() =>
-                                                    setShowModalChange(true)
-                                                }
+                                                onClick={() => {
+                                                    setShowModalChange(true);
+                                                    setData(ticket);
+                                                }}
                                             >
                                                 Đổi ngày sử dụng
                                             </Typography.Text>
@@ -198,6 +206,7 @@ const ManageTicket = () => {
             <ModalChange
                 showModal={showModalChange}
                 setShowModal={setShowModalChange}
+                data={data}
             />
         </div>
     );

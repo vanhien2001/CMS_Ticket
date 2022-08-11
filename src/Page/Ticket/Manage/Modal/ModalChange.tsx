@@ -1,26 +1,60 @@
-import { useState } from "react";
-import {
-    Button,
-    Col,
-    Form,
-    Modal,
-    Row,
-    Typography,
-} from "antd";
+import { useEffect, useState } from "react";
+import { Button, Col, Form, Modal, Row, Typography } from "antd";
+import moment, { Moment } from "moment";
 import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
+import { useAppDispatch } from "../../../../store";
+import { ticketType, update, getAll } from "../../../../store/reducers/ticketSlice";
 import DatePickerCustom from "../../../../component/DatePicker";
 import styles from "./Modal.module.scss";
+import { Timestamp } from "firebase/firestore";
 
 interface IModal {
+    data: ticketType | null;
     showModal: boolean;
     setShowModal: (boolean: boolean) => void;
 }
 
-const ModalContainer = ({ showModal, setShowModal }: IModal) => {
+const ModalContainer = ({ showModal, setShowModal, data }: IModal) => {
+    let date = data?.dateUse.toDate();
+    const dispatch = useAppDispatch();
     const [dayRange, setDayRange] = useState<DayRange>({
         from: null,
         to: null,
     });
+    console.log(dayRange);
+    const onFinish = () => {
+        const id = data?.id as string;
+        dispatch(
+            update({
+                id,
+                dateUse: Timestamp.fromDate(
+                    moment({
+                        ...dayRange.from,
+                        month: dayRange.from ? dayRange.from.month - 1 : 0,
+                    }).toDate()
+                ),
+            })
+        ).then(() => {
+            setShowModal(false);
+            dispatch(getAll());
+        });
+    };
+
+    useEffect(() => {
+        if (data !== null) {
+            date = data.dateUse.toDate();
+            setDayRange({
+                from: date
+                ? {
+                      day: date.getDate(),
+                      month: date.getMonth() + 1,
+                      year: date.getFullYear(),
+                  }
+                : null,
+            to: null,
+            })
+        }
+    }, [data])
 
     return (
         <Modal
@@ -44,11 +78,11 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                 layout="vertical"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
+                onFinish={onFinish}
             >
                 <Row>
                     <Col span="24">
                         <Form.Item
-                            name="dateStart"
                             label={
                                 <Typography.Text className={styles.label}>
                                     Số vé
@@ -56,7 +90,7 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                             }
                         >
                             <Typography.Text className={styles.text}>
-                                PKG20210502
+                                {data?.number}
                             </Typography.Text>
                         </Form.Item>
                     </Col>
@@ -64,7 +98,6 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                 <Row>
                     <Col span="24">
                         <Form.Item
-                            name="dateStart"
                             label={
                                 <Typography.Text className={styles.label}>
                                     Số vé
@@ -80,7 +113,6 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                 <Row>
                     <Col span="24">
                         <Form.Item
-                            name="dateStart"
                             label={
                                 <Typography.Text className={styles.label}>
                                     Tên sự kiện
@@ -88,7 +120,7 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                             }
                         >
                             <Typography.Text className={styles.text}>
-                                Hội trợ triển lãm hàng tiêu dùng 2021
+                                {data?.nameEvent}
                             </Typography.Text>
                         </Form.Item>
                     </Col>
@@ -96,7 +128,7 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                 <Row>
                     <Col span="24">
                         <Form.Item
-                            name="dateStart"
+                            name="dateUse"
                             label={
                                 <Typography.Text className={styles.label}>
                                     Hạn sử dụng
@@ -118,7 +150,6 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                         <div className={styles.buttonContainer}>
                             <Button
                                 ghost
-                                htmlType="submit"
                                 className={styles.btn}
                                 onClick={() => setShowModal(false)}
                             >

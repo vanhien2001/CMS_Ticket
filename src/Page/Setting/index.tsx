@@ -13,6 +13,7 @@ import Icon, { EditOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useAppSelector, useAppDispatch } from "../../store";
 import {
+    ticketPackageType,
     ticketPackageSelector,
     getAll,
 } from "../../store/reducers/ticketPackageSlice";
@@ -80,10 +81,10 @@ const columns = [
 const Setting = () => {
     const dispatch = useAppDispatch();
     const { loading, ticketPackages } = useAppSelector(ticketPackageSelector);
+    const [data, setData] = useState<ticketPackageType | null>(null);
     const [showModal, setShowModal] = useState({
         show: false,
         edit: false,
-        data: null,
     });
 
     useEffect(() => {
@@ -125,13 +126,13 @@ const Setting = () => {
                         <Button
                             type="primary"
                             className={styles.btn}
-                            onClick={() =>
+                            onClick={() => {
                                 setShowModal({
                                     show: true,
                                     edit: false,
-                                    data: null,
-                                })
-                            }
+                                });
+                                setData(null);
+                            }}
                         >
                             Thêm gói vé
                         </Button>
@@ -147,25 +148,39 @@ const Setting = () => {
                         stt: index++,
                         id: ticketPackage.code,
                         name: ticketPackage.name,
-                        validDate: moment(ticketPackage.validDate.toDate()).format(
-                            "DD/MM/YYYY HH:mm:ss"
+                        validDate: moment(
+                            ticketPackage.validDate.toDate()
+                        ).format("DD/MM/YYYY HH:mm:ss"),
+                        expiryDate: moment(
+                            ticketPackage.expiryDate.toDate()
+                        ).format("DD/MM/YYYY HH:mm:ss"),
+                        price: ticketPackage.price + "VNĐ",
+                        priceCombo: ticketPackage.comboPrice
+                            ? ticketPackage.comboPrice +
+                              "VNĐ/" +
+                              ticketPackage.quantity +
+                              "Vé"
+                            : "",
+                        status: (
+                            <Status
+                                type={ticketPackage.status}
+                                text={
+                                    ticketPackage.status == 1
+                                        ? "Đang áp dụng"
+                                        : "Tắt"
+                                }
+                            />
                         ),
-                        expiryDate: moment(ticketPackage.expiryDate.toDate()).format(
-                            "DD/MM/YYYY HH:mm:ss"
-                        ),
-                        price: ticketPackage.price +  "VNĐ",
-                        priceCombo: ticketPackage.comboPrice ? ticketPackage.comboPrice + "VNĐ/4 Vé" : '',
-                        status: <Status type={ticketPackage.status} text={ticketPackage.status == 1 ? "Đang áp dụng" : 'Tắt'} />,
                         edit: (
                             <div
                                 className={styles.link}
-                                onClick={() =>
+                                onClick={() => {
                                     setShowModal({
                                         show: true,
                                         edit: true,
-                                        data: null,
-                                    })
-                                }
+                                    });
+                                    setData(ticketPackage);
+                                }}
                             >
                                 <EditOutlined style={{ marginRight: "8px" }} />{" "}
                                 Cập nhật
@@ -182,7 +197,11 @@ const Setting = () => {
                     showSizeChanger: false,
                 }}
             />
-            <Modal showModal={showModal} setShowModal={setShowModal} />
+            <Modal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                data={data}
+            />
         </div>
     );
 };

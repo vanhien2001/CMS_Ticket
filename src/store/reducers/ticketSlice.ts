@@ -121,9 +121,9 @@ export const get = createAsyncThunk("ticket/get", async (id: string) => {
 
 export const update = createAsyncThunk(
     "ticket/update",
-    async ({ id, ...value }: ticketType) => {
-        const ref = doc(db, "tickets", id as string);
-        await updateDoc(ref, { ...value });
+    async ({ id, dateUse }: { id: string, dateUse: Timestamp}) => {
+        const ref = doc(db, "tickets", id);
+        await updateDoc(ref, { dateUse });
     }
 );
 

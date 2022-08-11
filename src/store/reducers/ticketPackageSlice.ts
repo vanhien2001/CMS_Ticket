@@ -18,8 +18,9 @@ export type ticketPackageType = {
     validDate: Timestamp;
     name: string;
     status: number;
-    price: string;
-    comboPrice?: string;
+    price: number;
+    comboPrice?: number;
+    quantity?: number;
 };
 
 export const addTicketPackage = createAsyncThunk(
