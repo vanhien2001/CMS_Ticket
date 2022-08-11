@@ -10,6 +10,7 @@ import {
     Typography,
 } from "antd";
 import Icon, { FilterOutlined, MoreOutlined } from "@ant-design/icons";
+import moment from "moment";
 import { useAppSelector, useAppDispatch } from "../../../store";
 import { ticketSelector, getAll } from "../../../store/reducers/ticketSlice";
 import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
@@ -75,7 +76,7 @@ const ManageTicket = () => {
     useEffect(() => {
         dispatch(getAll());
     }, []);
-    
+
     return (
         <div className={styles.manageTicket}>
             <Typography.Title className={styles.title}>
@@ -140,9 +141,14 @@ const ManageTicket = () => {
                                 }
                             />
                         ),
-                        date: "14/04/2021",
-                        dateRelease: "14/04/2021",
-                        gate: ticket.status == 0 ? 'Cổng ' + ticket.checkIn : "-",
+                        date: moment(ticket.dateUse.toDate()).format(
+                            "DD/MM/YYYY"
+                        ),
+                        dateRelease: moment(ticket.dateRelease.toDate()).format(
+                            "DD/MM/YYYY"
+                        ),
+                        gate:
+                            ticket.status == 0 ? "Cổng " + ticket.checkIn : "-",
                         edit:
                             ticket.status == 1 ? (
                                 <Popover

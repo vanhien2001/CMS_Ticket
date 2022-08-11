@@ -10,6 +10,7 @@ import {
     Typography,
 } from "antd";
 import Icon, { EditOutlined } from "@ant-design/icons";
+import moment from "moment";
 import { useAppSelector, useAppDispatch } from "../../store";
 import {
     ticketPackageSelector,
@@ -146,8 +147,12 @@ const Setting = () => {
                         stt: index++,
                         id: ticketPackage.code,
                         name: ticketPackage.name,
-                        validDate: "14/04/2021 08:00:00",
-                        expiryDate: "14/04/2021 23:00:00",
+                        validDate: moment(ticketPackage.validDate.toDate()).format(
+                            "DD/MM/YYYY HH:mm:ss"
+                        ),
+                        expiryDate: moment(ticketPackage.expiryDate.toDate()).format(
+                            "DD/MM/YYYY HH:mm:ss"
+                        ),
                         price: ticketPackage.price +  "VNĐ",
                         priceCombo: ticketPackage.comboPrice ? ticketPackage.comboPrice + "VNĐ/4 Vé" : '',
                         status: <Status type={ticketPackage.status} text={ticketPackage.status == 1 ? "Đang áp dụng" : 'Tắt'} />,

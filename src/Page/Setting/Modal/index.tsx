@@ -28,11 +28,27 @@ interface IModal {
     setShowModal: (prop: dataType) => void;
 }
 
+interface formValue {
+    code?: string;
+    name: string;
+    dateStart: any;
+    dateEnd: any;
+    price: string;
+    comboPrice: string;
+    status: number;
+}
+
 const ModalContainer = ({ showModal, setShowModal }: IModal) => {
     const [dayRange, setDayRange] = useState<DayRange>({
         from: null,
         to: null,
     });
+    const [price, setPrice] = useState<boolean>(false);
+    const [comboPrice, setComboPrice] = useState<boolean>(false);
+
+    const onFinish = (value: formValue) => {
+        console.log(value);
+    };
 
     return (
         <Modal
@@ -58,11 +74,11 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
             footer={null}
             maskClosable={false}
         >
-            <Form name="filter" layout="vertical">
+            <Form name="filter" layout="vertical" onFinish={onFinish}>
                 <Row gutter={24}>
                     <Col span="12">
                         <Form.Item
-                            name="name"
+                            name={showModal.edit ? "code" : "name"}
                             labelCol={{ span: 24 }}
                             label={
                                 <Typography.Text className={styles.label}>
@@ -167,19 +183,18 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                 </Row>
                 <Row>
                     <Col span="24">
-                        <Form.Item
-                            name="status"
-                            label={
-                                <Typography.Text className={styles.label}>
-                                    Giá vé áp dụng
-                                </Typography.Text>
-                            }
-                        >
-                            <Row>
-                                <Col span="24">
-                                    <Checkbox value="1">
-                                        <span className={styles.checkItem}>
-                                            Vé lẻ (vnđ/vé) với giá
+                        <Typography.Text className={styles.label}>
+                            Giá vé áp dụng
+                        </Typography.Text>
+                        <Row>
+                            <Col span="24">
+                                <Checkbox
+                                    checked={price}
+                                    onChange={(e) => setPrice(!price)}
+                                >
+                                    <span className={styles.checkItem}>
+                                        Vé lẻ (vnđ/vé) với giá
+                                        <Form.Item name="price">
                                             <Input
                                                 style={{
                                                     width: "148px",
@@ -187,14 +202,21 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                                 }}
                                                 size="large"
                                                 placeholder="Giá vé"
-                                                disabled
+                                                disabled={!price}
                                             />{" "}
-                                            / vé
-                                        </span>
-                                    </Checkbox>
-                                </Col>
-                                <Col span="24">
-                                    <Checkbox value="1">
+                                        </Form.Item>
+                                        / vé
+                                    </span>
+                                </Checkbox>
+                            </Col>
+                            <Col span="24">
+                                <Form.Item name="comboPrice">
+                                    <Checkbox
+                                        checked={comboPrice}
+                                        onChange={(e) =>
+                                            setComboPrice(!comboPrice)
+                                        }
+                                    >
                                         <span className={styles.checkItem}>
                                             Combo vé với giá
                                             <Input
@@ -204,7 +226,7 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                                 }}
                                                 size="large"
                                                 placeholder="Giá vé"
-                                                disabled
+                                                disabled={!comboPrice}
                                             />{" "}
                                             /{" "}
                                             <Input
@@ -214,14 +236,14 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                                 }}
                                                 size="large"
                                                 placeholder="Giá vé"
-                                                disabled
+                                                disabled={!comboPrice}
                                             />{" "}
                                             vé
                                         </span>
                                     </Checkbox>
-                                </Col>
-                            </Row>
-                        </Form.Item>
+                                </Form.Item>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
                 <Row>
@@ -235,7 +257,7 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                             }
                         >
                             <Select
-                                defaultValue="1"
+                                defaultValue={1}
                                 size="large"
                                 suffixIcon={
                                     <DownOutlined
@@ -246,8 +268,8 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                     />
                                 }
                             >
-                                <Option value="1">Đang áp dụng</Option>
-                                <Option value="2">Tắt</Option>
+                                <Option value={1}>Đang áp dụng</Option>
+                                <Option value={2}>Tắt</Option>
                             </Select>
                             <Typography.Text className={styles.note}>
                                 <span className={styles.require}>*</span>

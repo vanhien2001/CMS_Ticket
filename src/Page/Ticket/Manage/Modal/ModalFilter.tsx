@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     Checkbox,
@@ -10,7 +10,12 @@ import {
     Space,
     Typography,
 } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import { CheckboxValueType } from "antd/lib/checkbox/Group";
+import moment, { Moment } from "moment";
 import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
+import { useAppDispatch } from "../../../../store";
+import { getAll } from "../../../../store/reducers/ticketSlice";
 import DatePickerCustom from "../../../../component/DatePicker";
 import styles from "./Modal.module.scss";
 
@@ -19,11 +24,58 @@ interface IModal {
     setShowModal: (boolean: boolean) => void;
 }
 
+interface formValue {
+    checkIn: [number];
+    dateStart: Moment;
+    dateEnd: Moment;
+    status: number;
+}
+
 const ModalContainer = ({ showModal, setShowModal }: IModal) => {
+    const dispatch = useAppDispatch();
+    const [checkIn, setCheckIn] = useState<CheckboxValueType[]>([]);
+    const [checkAll, setCheckAll] = useState(false);
     const [dayRange, setDayRange] = useState<DayRange>({
         from: null,
         to: null,
     });
+
+    useEffect(() => {
+        if (checkIn.length === 0) {
+            setCheckAll(true);
+        }
+        if (checkIn.length > 0) {
+            setCheckAll(false);
+        }
+    }, [checkIn]);
+
+    const checkInOnchange = (e: CheckboxValueType[]) => {
+        setCheckIn(e);
+    };
+
+    const selectAllOnChange = (e: CheckboxChangeEvent) => {
+        setCheckAll(e.target.checked);
+        if (e.target.checked) {
+            setCheckIn([]);
+        }
+    };
+
+    const onFinish = (value: formValue) => {
+        dispatch(
+            getAll({
+                ...value,
+                checkIn,
+                dateStart: dayRange.from ? moment({
+                    ...dayRange.from,
+                    month: dayRange.from ? dayRange.from.month - 1 : 0,
+                }) : null,
+                dateEnd: dayRange.to ? moment({
+                    ...dayRange.to,
+                    month: dayRange.to ? dayRange.to.month - 1 : 0,
+                }) :  null,
+            })
+        ).then(() => {setShowModal(false)});
+    };
 
     return (
         <Modal
@@ -41,7 +93,7 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
             onCancel={() => setShowModal(false)}
             footer={null}
         >
-            <Form name="filter" layout="vertical">
+            <Form name="filter" layout="vertical" onFinish={onFinish}>
                 <Row>
                     <Col span="12">
                         <Form.Item
@@ -90,24 +142,24 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                                 </Typography.Text>
                             }
                         >
-                            <Radio.Group>
+                            <Radio.Group defaultValue={null}>
                                 <Space>
-                                    <Radio value="all">
+                                    <Radio value={null}>
                                         <span className={styles.checkItem}>
                                             Tất cả
                                         </span>
                                     </Radio>
-                                    <Radio value="1">
+                                    <Radio value={0}>
                                         <span className={styles.checkItem}>
                                             Đã sử dụng
                                         </span>
                                     </Radio>
-                                    <Radio value="2">
+                                    <Radio value={1}>
                                         <span className={styles.checkItem}>
                                             Chưa sử dụng
                                         </span>
                                     </Radio>
-                                    <Radio value="3">
+                                    <Radio value={2}>
                                         <span className={styles.checkItem}>
                                             Hết hạn
                                         </span>
@@ -120,52 +172,56 @@ const ModalContainer = ({ showModal, setShowModal }: IModal) => {
                 <Row>
                     <Col span="24">
                         <Form.Item
-                            name="status"
+                            name="checkIn"
                             label={
                                 <Typography.Text className={styles.label}>
                                     Cổng check-in
                                 </Typography.Text>
                             }
                         >
-                            <Checkbox.Group>
+                            <Checkbox
+                                className={styles.checkAll}
+                                checked={checkAll}
+                                onChange={selectAllOnChange}
+                            >
+                                <span className={styles.checkItem}>Tất cả</span>
+                            </Checkbox>
+                            <Checkbox.Group
+                                value={checkIn}
+                                onChange={checkInOnchange}
+                            >
                                 <Row>
+                                    <Col span={8}></Col>
                                     <Col span="8">
-                                        <Checkbox value="all">
-                                            <span className={styles.checkItem}>
-                                                Tất cả
-                                            </span>
-                                        </Checkbox>
-                                    </Col>
-                                    <Col span="8">
-                                        <Checkbox value="1">
+                                        <Checkbox value={1}>
                                             <span className={styles.checkItem}>
                                                 Cổng 1
                                             </span>
                                         </Checkbox>
                                     </Col>
                                     <Col span="8">
-                                        <Checkbox value="2">
+                                        <Checkbox value={2}>
                                             <span className={styles.checkItem}>
                                                 Cổng 2
                                             </span>
                                         </Checkbox>
                                     </Col>
                                     <Col span="8">
-                                        <Checkbox value="3">
+                                        <Checkbox value={3}>
                                             <span className={styles.checkItem}>
                                                 Cổng 3
                                             </span>
                                         </Checkbox>
                                     </Col>
                                     <Col span="8">
-                                        <Checkbox value="4">
+                                        <Checkbox value={4}>
                                             <span className={styles.checkItem}>
                                                 Cổng 4
                                             </span>
                                         </Checkbox>
                                     </Col>
                                     <Col span="8">
-                                        <Checkbox value="5">
+                                        <Checkbox value={5}>
                                             <span className={styles.checkItem}>
                                                 Cổng 5
                                             </span>

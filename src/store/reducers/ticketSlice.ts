@@ -8,6 +8,7 @@ import {
     setDoc,
     Timestamp,
 } from "firebase/firestore";
+import moment, { Moment } from "moment";
 import { db } from "../../config/firebase";
 import { RootState } from "../index";
 
@@ -15,7 +16,7 @@ export type ticketType = {
     id?: string;
     number: string;
     bookingCode: string;
-    checkIn: string;
+    checkIn: number;
     dateRelease: Timestamp;
     dateUse: Timestamp;
     nameEvent: string;
@@ -35,9 +36,11 @@ export const addTicket = createAsyncThunk(
 );
 
 interface Ifilter {
-    active: boolean | null;
-    connect: boolean | null;
-    keywords: string;
+    checkIn?: any;
+    dateStart: Moment | null;
+    dateEnd: Moment | null;
+    status?: number;
+    checked?: boolean;
 }
 
 export const getAll = createAsyncThunk(
@@ -52,6 +55,53 @@ export const getAll = createAsyncThunk(
                 ...(value.data() as ticketType),
             });
         });
+        if (filter) {
+            console.log("filter");
+            console.log(filter);
+            tickets = tickets.filter((ticket) => {
+                if (
+                    filter.status != undefined &&
+                    filter.status != null &&
+                    ticket.status !== filter.status
+                )
+                    return false;
+                if (
+                    filter.checkIn != undefined &&
+                    filter.checkIn.length > 0 &&
+                    !filter.checkIn.includes(ticket.checkIn)
+                )
+                    return false;
+                if (
+                    filter.checked != undefined &&
+                    filter.checked != null &&
+                    ticket.checked !== filter.checked
+                )
+                    return false;
+                if (filter.dateStart != null && filter.dateEnd != null) {
+                    const dateProvider = moment(ticket.dateUse.toDate());
+                    if (
+                        filter.dateStart &&
+                        !moment(filter.dateStart as Moment).isSameOrBefore(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    if (
+                        filter.dateEnd &&
+                        !moment(filter.dateEnd as Moment).isSameOrAfter(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+        }
         tickets.reverse();
         return tickets;
     }

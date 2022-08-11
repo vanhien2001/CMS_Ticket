@@ -13,6 +13,7 @@ import {
 import Icon from "@ant-design/icons";
 import { DayRange } from "@hassanmojab/react-modern-calendar-datepicker";
 import clsx from "clsx";
+import moment, { Moment } from "moment";
 import { useAppSelector, useAppDispatch } from "../../../store";
 import { ticketSelector, getAll } from "../../../store/reducers/ticketSlice";
 import { ReactComponent as searchSvg } from "../../../Asset/search.svg";
@@ -53,6 +54,12 @@ const columns = [
     },
 ];
 
+interface formValue {
+    dateStart: Moment;
+    dateEnd: Moment;
+    checked: boolean;
+}
+
 const ChangeTicket = () => {
     const dispatch = useAppDispatch();
     const { loading, tickets } = useAppSelector(ticketSelector);
@@ -64,6 +71,22 @@ const ChangeTicket = () => {
     useEffect(() => {
         dispatch(getAll());
     }, []);
+
+    const onFinish = (value: formValue) => {
+        dispatch(
+            getAll({
+                ...value,
+                dateStart: dayRange.from ? moment({
+                    ...dayRange.from,
+                    month: dayRange.from ? dayRange.from.month - 1 : 0,
+                }) : null,
+                dateEnd: dayRange.to ? moment({
+                    ...dayRange.to,
+                    month: dayRange.to ? dayRange.to.month - 1 : 0,
+                }) :  null,
+            })
+        );
+    };
 
     return (
         <div className={styles.changeTicket}>
@@ -104,12 +127,14 @@ const ChangeTicket = () => {
                         <Table
                             className={styles.table}
                             columns={columns}
-                            dataSource={tickets.filter(ticket => ticket.status == 1).map((ticket, index) => {
+                            dataSource={tickets.filter(ticket => ticket.status == 0).map((ticket, index) => {
                                 return {
                                     key: index++,
                                     stt: index++,
                                     number: ticket.number,
-                                    date: "14/04/2021",
+                                    date: moment(
+                                        ticket.dateUse.toDate()
+                                    ).format("DD/MM/YYYY"),
                                     name: "Vé cổng",
                                     gate: 'Cổng ' + ticket.checkIn,
                                     note: <span className={clsx(styles.note, {[styles.redNote] : ticket.checked})}>{ticket.checked ? 'Đã đối soát' : 'Chưa đối soát'}</span>,
@@ -132,23 +157,24 @@ const ChangeTicket = () => {
                         layout="vertical"
                         labelCol={{ span: 12 }}
                         wrapperCol={{ span: 12 }}
+                        onFinish={onFinish}
                     >
                         <Typography.Title className={styles.title}>
                             Lọc vé
                         </Typography.Title>
                         <Form.Item
-                            name="status"
+                            name="checked"
                             label={
                                 <Typography.Text className={styles.label}>
                                     Tình trạng đối soát
                                 </Typography.Text>
                             }
                         >
-                            <Radio.Group>
+                            <Radio.Group defaultValue={null}>
                                 <Space direction="vertical">
-                                    <Radio value="all">Tất cả</Radio>
-                                    <Radio value="true">Đã đối soát</Radio>
-                                    <Radio value="false">Chưa đối soát</Radio>
+                                    <Radio value={null}>Tất cả</Radio>
+                                    <Radio value={true}>Đã đối soát</Radio>
+                                    <Radio value={false}>Chưa đối soát</Radio>
                                 </Space>
                             </Radio.Group>
                         </Form.Item>
