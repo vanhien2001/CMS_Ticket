@@ -2,7 +2,7 @@ import { Layout } from "antd";
 import clsx from "clsx";
 import SideBar from "../Layout/Sidebar";
 import HeaderContent from "../Layout/Header";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import Dashboard from "./Dashboard";
 import ChangeTicket from "./Ticket/Change";
@@ -28,7 +28,13 @@ const Home = () => {
                 >
                     <SideBar />
                 </Sider>
-                <Layout style={{ marginLeft: 250, height: "100vh", backgroundColor: "#F9F6F4"}}>
+                <Layout
+                    style={{
+                        marginLeft: 250,
+                        height: "100vh",
+                        backgroundColor: "#F9F6F4",
+                    }}
+                >
                     <Header
                         style={{
                             height: "88px",
@@ -41,9 +47,19 @@ const Home = () => {
                     <Content>
                         <Routes>
                             <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/manage-ticket" element={<ManageTicket />} />
-                            <Route path="/change-ticket" element={<ChangeTicket />} />
-                            <Route path="/setting/*" element={<Setting />} />
+                            <Route
+                                path="/manage-ticket"
+                                element={<ManageTicket />}
+                            />
+                            <Route
+                                path="/change-ticket"
+                                element={<ChangeTicket />}
+                            />
+                            <Route path="/setting/*" element={<Setting />} />{" "}
+                            <Route
+                                path="/"
+                                element={<Navigate to="/dashboard" replace />}
+                            />
                         </Routes>
                     </Content>
                 </Layout>

@@ -98,7 +98,7 @@ const ModalContainer = ({ showModal, setShowModal, data }: IModal) => {
         console.log(value);
         delete value.timeStart;
         delete value.timeEnd;
-        if(!value.comboPrice){
+        if (!value.comboPrice) {
             delete value.comboPrice;
             delete value.quantity;
         }
